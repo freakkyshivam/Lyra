@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Fira+Code:wght@400;500&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-outfit: "Outfit", sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-mono: "Fira Code", monospace;
+  
+  --animate-spin-slow: spin 12s linear infinite;
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-float: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(1deg); }
+}
+
+@utility glass-panel {
+  background: rgba(10, 10, 14, 0.45);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+@utility glass-panel-light {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@utility glass-card {
+  background: rgba(18, 18, 26, 0.35);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6);
+}
+
+@utility text-glow {
+  text-shadow: 0 0 15px var(--glow-color, rgba(255, 255, 255, 0.5)), 0 0 30px var(--glow-color, rgba(255, 255, 255, 0.3));
+}
+
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.15);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+body {
+  background-color: #050507;
+  color: #f3f4f6;
+  overflow-x: hidden;
+  margin: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Themes variables */
+.theme-spotify {
+  --color-accent: #1db954;
+  --glow-color: rgba(29, 185, 84, 0.65);
+}
+.theme-apple {
+  --color-accent: #fc3c44;
+  --glow-color: rgba(252, 60, 68, 0.65);
+}
+.theme-amoled {
+  --color-accent: #ffffff;
+  --glow-color: rgba(255, 255, 255, 0.4);
+}
+.theme-cyberpunk {
+  --color-accent: #00f0ff;
+  --glow-color: rgba(0, 240, 255, 0.65);
+}
+.theme-synthwave {
+  --color-accent: #ff7b00;
+  --glow-color: rgba(255, 123, 0, 0.65);
+}
+.theme-ocean {
+  --color-accent: #0088ff;
+  --glow-color: rgba(0, 136, 255, 0.65);
+}
+.theme-sunset {
+  --color-accent: #ff3366;
+  --glow-color: rgba(255, 51, 102, 0.65);
+}

@@ -56,7 +56,15 @@ export const KaraokeLyrics: React.FC = () => {
     inter: 'font-sans',
   };
 
+  // Text alignment mappings
+  const alignClassMap = {
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-right'
+  };
+
   const selectedFont = fontClassMap[settings.fontFamily] || 'font-sans';
+  const selectedAlign = alignClassMap[settings.lyricAlignment] || 'text-center';
 
   if (!lyrics || lyrics.length === 0) {
     return (
@@ -68,7 +76,14 @@ export const KaraokeLyrics: React.FC = () => {
   }
 
   // Accent color for active glowing effect
-  const glowAccent = dominantColors?.accent || 'var(--color-accent, #a855f7)';
+  const highlightColorMap = {
+    accent: dominantColors?.accent || '#a855f7',
+    cyan: '#06b6d4',
+    magenta: '#ec4899',
+    yellow: '#eab308',
+    white: '#ffffff'
+  };
+  const glowAccent = highlightColorMap[settings.highlightColor] || dominantColors?.accent || '#a855f7';
 
   return (
     <div className="w-full h-full flex-grow relative overflow-hidden flex flex-col">
@@ -86,11 +101,11 @@ export const KaraokeLyrics: React.FC = () => {
           const isPast = idx < activeLyricIndex;
           const isFuture = idx > activeLyricIndex;
 
-          let lineClass = 'text-left lg:text-center text-gray-500 opacity-30 blur-[1px] transition-all duration-700 cursor-pointer';
+          let lineClass = `${selectedAlign} text-gray-500 opacity-30 blur-[1px] transition-all duration-700 cursor-pointer`;
           let style: React.CSSProperties = {};
 
           if (isActive) {
-            lineClass = 'text-left lg:text-center text-white scale-105 opacity-100 font-bold transition-all duration-300 cursor-pointer';
+            lineClass = `${selectedAlign} text-white scale-105 opacity-100 font-bold transition-all duration-300 cursor-pointer`;
             style = {
               fontSize: `${settings.subtitleSize}rem`,
               lineHeight: '1.25',
@@ -99,7 +114,7 @@ export const KaraokeLyrics: React.FC = () => {
               filter: `drop-shadow(0 0 ${settings.glowIntensity * 1.5}px ${glowAccent}77)`,
             } as React.CSSProperties;
           } else if (isPast) {
-            lineClass = 'text-left lg:text-center text-white/50 opacity-40 blur-none transition-all duration-700 cursor-pointer hover:opacity-75';
+            lineClass = `${selectedAlign} text-white/50 opacity-40 blur-none transition-all duration-700 cursor-pointer hover:opacity-75`;
             style = {
               fontSize: `${settings.subtitleSize * 0.85}rem`,
               lineHeight: '1.3',
@@ -107,7 +122,7 @@ export const KaraokeLyrics: React.FC = () => {
           } else if (isFuture) {
             // Apply blur amount if configured
             const blurPx = settings.blurAmount > 0 ? `${settings.blurAmount / 2}px` : '1px';
-            lineClass = 'text-left lg:text-center text-gray-500/30 opacity-25 cursor-pointer hover:opacity-50 transition-all duration-700';
+            lineClass = `${selectedAlign} text-gray-500/30 opacity-25 cursor-pointer hover:opacity-50 transition-all duration-700`;
             style = {
               fontSize: `${settings.subtitleSize * 0.85}rem`,
               lineHeight: '1.3',

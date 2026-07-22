@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Music, Settings, Plus, Play, Trash2, SkipForward } from 'lucide-react';
+import { Music, Settings, Plus, Play, Trash2, SkipForward, Sparkles } from 'lucide-react';
 import { useLyraStore } from './store/useLyraStore';
 import { BackgroundEffects } from './components/BackgroundEffects';
 import { HeroInput } from './components/HeroInput';
@@ -80,20 +80,27 @@ function App() {
       <header className="w-full z-40 border-b border-white/5 bg-black/10 backdrop-blur-md flex-shrink-0">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           
-          {/* App Logo */}
-          <div 
-            onClick={() => {
-              setVideoUrl('');
-              resetStore();
-            }}
-            className="flex items-center space-x-2.5 cursor-pointer select-none group"
-          >
-            <div className="w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center shadow-lg transition-transform duration-500 group-hover:rotate-12">
-              <Music className="w-5 h-5 stroke-[2.5]" />
+          {/* App Logo & Author Badge */}
+          <div className="flex items-center space-x-3">
+            <div 
+              onClick={() => {
+                setVideoUrl('');
+                resetStore();
+              }}
+              className="flex items-center space-x-2.5 cursor-pointer select-none group"
+            >
+              <div className="w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center shadow-lg transition-transform duration-500 group-hover:rotate-12">
+                <Music className="w-5 h-5 stroke-[2.5]" />
+              </div>
+              <span className="text-xl font-extrabold tracking-tight font-outfit bg-gradient-to-r from-white via-white to-gray-400 bg-clip-text text-transparent">
+                Lyra
+              </span>
             </div>
-            <span className="text-xl font-extrabold tracking-tight font-outfit bg-gradient-to-r from-white via-white to-gray-400 bg-clip-text text-transparent">
-              Lyra
-            </span>
+
+            <div className="hidden md:flex items-center space-x-1.5 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-xs font-bold text-purple-300 font-mono select-none shadow-sm">
+              <Sparkles className="w-3 h-3 text-purple-400" />
+              <span>Made by Shivam Chaudhary for fun</span>
+            </div>
           </div>
 
           {/* Navigation Controls */}
@@ -150,24 +157,10 @@ function App() {
               exit={{ opacity: 0 }}
               className="w-full flex flex-col items-center"
             >
-              <div className="text-center max-w-xl mx-auto mb-2 select-none">
-                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-gray-400 mb-6 font-mono tracking-wide">
-                  <Play className="w-3.5 h-3.5 fill-gray-400 stroke-none" />
-                  <span>KARAOKE PLAYER FOR YOUTUBE</span>
-                </div>
-                <h2 className="text-4xl sm:text-5xl md:text-6xl font-black font-outfit tracking-tight text-white mb-4 leading-tight">
-                  Sing synchronized.
-                </h2>
-                <p className="text-gray-400 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
-                  Immersive lyrics, color-extracted ambient backdrops, and precision timing controls.
-                </p>
-              </div>
-
-              {/* URL input field */}
-              <HeroInput />
-
-              {/* Illustration and Quick select templates */}
-              <EmptyState onPasteExample={handleQuickPaste} />
+              {/* Illustration, text title, URL input field, and quick select */}
+              <EmptyState onPasteExample={handleQuickPaste}>
+                <HeroInput />
+              </EmptyState>
             </motion.div>
           ) : (
             /* Immersive Player View */

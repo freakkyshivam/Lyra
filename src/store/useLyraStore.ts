@@ -18,6 +18,11 @@ export interface LyraSettings {
   backgroundBrightness: number; // 0 to 100
   autoScroll: boolean;
   particleDensity: number; // 0 to 100
+  lyricAlignment: 'left' | 'center' | 'right';
+  pitchOffset: number; // -3 to +3 semitones
+  enableVinylRotation: boolean;
+  vocalLeadInTime: number; // 0 to 5 seconds
+  highlightColor: 'accent' | 'cyan' | 'magenta' | 'yellow' | 'white';
 }
 
 export interface DominantColors {
@@ -106,6 +111,11 @@ const DEFAULT_SETTINGS: LyraSettings = {
   backgroundBrightness: 40,
   autoScroll: true,
   particleDensity: 40,
+  lyricAlignment: 'center',
+  pitchOffset: 0,
+  enableVinylRotation: true,
+  vocalLeadInTime: 0,
+  highlightColor: 'accent',
 };
 
 export const useLyraStore = create<LyraState>((set) => ({

@@ -11,6 +11,7 @@ export const YouTubeEmbed: React.FC = () => {
   const dominantColors = useLyraStore((state) => state.dominantColors);
   const player = useLyraStore((state) => state.player);
   const videoTitle = useLyraStore((state) => state.videoTitle);
+  const enableVinylRotation = useLyraStore((state) => state.settings.enableVinylRotation);
 
   const setPlayer = useLyraStore((state) => state.setPlayer);
   const setPlaybackState = useLyraStore((state) => state.setPlaybackState);
@@ -142,7 +143,7 @@ export const YouTubeEmbed: React.FC = () => {
                 #121212 6px
               )`,
               animation: 'spin 12s linear infinite',
-              animationPlayState: playbackState === 'playing' ? 'running' : 'paused',
+              animationPlayState: (playbackState === 'playing' && enableVinylRotation) ? 'running' : 'paused',
               border: '2px solid rgba(255,255,255,0.06)',
             }}
           >

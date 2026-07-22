@@ -8,7 +8,15 @@ import {
   Eye, 
   Activity, 
   Layers,
-  Palette
+  Palette,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  Music2,
+  Disc,
+  Clock,
+  Highlighter,
+  RotateCcw
 } from 'lucide-react';
 import { useLyraStore } from '../store/useLyraStore';
 import type { ThemeName } from '../store/useLyraStore';
@@ -49,6 +57,32 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
     { key: 'amoled', label: 'AMOLED Black', color: '#ffffff' }
   ];
 
+  const highlightColors: { key: typeof settings.highlightColor; label: string; color: string }[] = [
+    { key: 'accent', label: 'Theme Accent', color: '#a855f7' },
+    { key: 'cyan', label: 'Cyan Neon', color: '#06b6d4' },
+    { key: 'magenta', label: 'Magenta Pink', color: '#ec4899' },
+    { key: 'yellow', label: 'Electric Yellow', color: '#eab308' },
+    { key: 'white', label: 'Pure White', color: '#ffffff' }
+  ];
+
+  const handleResetDefaults = () => {
+    updateSettings({
+      subtitleSize: 1.8,
+      fontFamily: 'outfit',
+      animationSpeed: 1,
+      glowIntensity: 6,
+      blurAmount: 6,
+      backgroundBrightness: 40,
+      autoScroll: true,
+      particleDensity: 40,
+      lyricAlignment: 'center',
+      pitchOffset: 0,
+      enableVinylRotation: true,
+      vocalLeadInTime: 0,
+      highlightColor: 'accent',
+    });
+  };
+
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -66,24 +100,34 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-lg rounded-3xl glass-card border border-white/10 shadow-2xl p-6 overflow-hidden z-10 max-h-[85vh] overflow-y-auto no-scrollbar font-sans"
+          className="relative w-full max-w-xl rounded-3xl glass-card border border-white/10 shadow-2xl p-6 overflow-hidden z-10 max-h-[85vh] overflow-y-auto no-scrollbar font-sans"
         >
           {/* Header */}
           <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
             <div className="flex items-center space-x-2.5">
               <Sliders className="w-5 h-5 text-gray-400" />
-              <h3 className="text-lg font-bold font-outfit text-white">Playback Settings</h3>
+              <h3 className="text-lg font-bold font-outfit text-white">Playback & Player Settings</h3>
             </div>
-            <button
-              onClick={onClose}
-              className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </button>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={handleResetDefaults}
+                className="flex items-center space-x-1.5 text-xs font-semibold text-gray-400 hover:text-white px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 transition-all cursor-pointer"
+                title="Reset Settings to Defaults"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Reset Defaults</span>
+              </button>
+              <button
+                onClick={onClose}
+                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
           <div className="space-y-6">
-            {/* Theme Selector inside settings */}
+            {/* Theme Selector */}
             <div>
               <label className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2.5 flex items-center gap-1.5">
                 <Palette className="w-3.5 h-3.5" />
@@ -169,6 +213,103 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                 )}
               </div>
             )}
+
+            {/* Lyric Text Alignment */}
+            <div>
+              <label className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2.5 flex items-center gap-1.5">
+                <AlignCenter className="w-3.5 h-3.5" />
+                <span>Lyric Text Alignment</span>
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { key: 'left', label: 'Left', icon: <AlignLeft className="w-4 h-4" /> },
+                  { key: 'center', label: 'Center', icon: <AlignCenter className="w-4 h-4" /> },
+                  { key: 'right', label: 'Right', icon: <AlignRight className="w-4 h-4" /> }
+                ].map((item) => (
+                  <button
+                    key={item.key}
+                    onClick={() => updateSettings({ lyricAlignment: item.key as any })}
+                    className={`py-2 px-3 rounded-xl border text-xs font-semibold flex items-center justify-center space-x-2 transition-all cursor-pointer ${
+                      settings.lyricAlignment === item.key
+                        ? 'bg-white text-black border-white shadow-lg'
+                        : 'bg-white/[0.02] border-white/5 text-gray-300 hover:bg-white/5 hover:border-white/10'
+                    }`}
+                  >
+                    {item.icon}
+                    <span>{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Lyric Active Highlight Color */}
+            <div>
+              <label className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2.5 flex items-center gap-1.5">
+                <Highlighter className="w-3.5 h-3.5" />
+                <span>Active Sentence Highlight Color</span>
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {highlightColors.map((h) => (
+                  <button
+                    key={h.key}
+                    onClick={() => updateSettings({ highlightColor: h.key })}
+                    className={`py-2 px-3 rounded-xl border text-xs font-semibold text-left flex items-center space-x-2 transition-all cursor-pointer ${
+                      settings.highlightColor === h.key
+                        ? 'bg-white/10 border-white/20 text-white shadow-lg'
+                        : 'bg-white/[0.02] border-white/5 text-gray-400 hover:bg-white/5 hover:border-white/10'
+                    }`}
+                  >
+                    <span 
+                      className="w-2.5 h-2.5 rounded-full flex-shrink-0" 
+                      style={{ backgroundColor: h.color }}
+                    />
+                    <span className="truncate">{h.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Pitch Shift Key Transpose Helper */}
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold flex items-center gap-1.5">
+                  <Music2 className="w-3.5 h-3.5" />
+                  <span>Vocal Key Transpose (Pitch)</span>
+                </span>
+                <span className="text-sm font-mono font-bold text-purple-400">
+                  {settings.pitchOffset > 0 ? `+${settings.pitchOffset}` : settings.pitchOffset} Semitones
+                </span>
+              </div>
+              <input
+                type="range"
+                min="-3"
+                max="3"
+                step="1"
+                value={settings.pitchOffset}
+                onChange={(e) => updateSettings({ pitchOffset: parseInt(e.target.value) })}
+                className="w-full h-1 bg-white/5 rounded-lg appearance-none cursor-pointer accent-purple-400"
+              />
+            </div>
+
+            {/* Lead-In Countdown Timer */}
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5" />
+                  <span>Karaoke Vocal Lead-In Countdown</span>
+                </span>
+                <span className="text-sm font-medium text-white">{settings.vocalLeadInTime}s</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="5"
+                step="1"
+                value={settings.vocalLeadInTime}
+                onChange={(e) => updateSettings({ vocalLeadInTime: parseInt(e.target.value) })}
+                className="w-full h-1 bg-white/5 rounded-lg appearance-none cursor-pointer accent-white"
+              />
+            </div>
 
             {/* Font Family Selection */}
             <div>
@@ -328,6 +469,26 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                 <div
                   className={`w-5 h-5 rounded-full shadow-md transform duration-300 ${
                     settings.autoScroll ? 'translate-x-6 bg-black' : 'translate-x-0 bg-gray-400'
+                  }`}
+                />
+              </button>
+            </div>
+
+            {/* Rotating Vinyl Toggle */}
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-sm font-bold text-white flex items-center gap-1.5">
+                <Disc className="w-4 h-4 text-gray-400" />
+                <span>Rotating Vinyl Animation</span>
+              </span>
+              <button
+                onClick={() => updateSettings({ enableVinylRotation: !settings.enableVinylRotation })}
+                className={`w-12 h-6 rounded-full p-0.5 transition-colors duration-300 focus:outline-none cursor-pointer ${
+                  settings.enableVinylRotation ? 'bg-white' : 'bg-white/10'
+                }`}
+              >
+                <div
+                  className={`w-5 h-5 rounded-full shadow-md transform duration-300 ${
+                    settings.enableVinylRotation ? 'translate-x-6 bg-black' : 'translate-x-0 bg-gray-400'
                   }`}
                 />
               </button>

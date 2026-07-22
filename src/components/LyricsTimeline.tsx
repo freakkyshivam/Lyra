@@ -68,10 +68,10 @@ export const LyricsTimeline: React.FC = () => {
   const accentColor = dominantColors?.accent || 'var(--color-accent, #a855f7)';
 
   return (
-    <div className="w-full font-sans select-none px-4 py-3">
-      <div className="flex items-center space-x-4 max-w-5xl mx-auto">
+    <div className="w-full font-sans select-none px-2 sm:px-4 py-2 sm:py-3">
+      <div className="flex items-center space-x-2 sm:space-x-4 max-w-5xl mx-auto">
         {/* Current Time Display */}
-        <span className="text-xs font-semibold text-gray-400 w-10 text-right tabular-nums">
+        <span className="text-[11px] sm:text-xs font-semibold text-gray-400 w-8 sm:w-10 text-right tabular-nums">
           {formatTime(currentTime)}
         </span>
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Music, Settings, Plus, Play, Trash2, SkipForward, Sparkles } from 'lucide-react';
+import { Music, Settings, Plus, Play, Pause, Trash2, SkipForward, Sparkles } from 'lucide-react';
 import { useLyraStore } from './store/useLyraStore';
 import { BackgroundEffects } from './components/BackgroundEffects';
 import { HeroInput } from './components/HeroInput';
@@ -27,6 +27,10 @@ function App() {
   const alternativeError = useLyraStore((state) => state.alternativeError);
   const trackName = useLyraStore((state) => state.trackName);
   const artistName = useLyraStore((state) => state.artistName);
+  const videoTitle = useLyraStore((state) => state.videoTitle);
+  const player = useLyraStore((state) => state.player);
+  const playbackState = useLyraStore((state) => state.playbackState);
+  const playQueueItemDirect = useLyraStore((state) => state.playQueueItemDirect);
 
   const queue = useLyraStore((state) => state.queue);
   const addToQueue = useLyraStore((state) => state.addToQueue);
@@ -172,16 +176,56 @@ function App() {
               transition={{ duration: 0.6, ease: 'easeOut' }}
               className="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-8 xl:gap-12 overflow-hidden"
             >
-              {/* Left Column: Player & Rotating Vinyl */}
-              <div className="w-full lg:w-[40%] flex flex-col justify-center items-center flex-shrink-0">
+              {/* Left Column: Player & Rotating Vinyl (Hidden on Mobile < lg) */}
+              <div className="hidden lg:flex w-full lg:w-[40%] flex-col justify-center items-center flex-shrink-0">
                 <YouTubeEmbed />
               </div>
 
-              {/* Right Column: Dynamic Lyrics Card */}
-              <div className="w-full lg:w-[60%] h-full max-h-[calc(100vh-190px)] flex flex-col justify-center overflow-hidden">
-                <div className="glass-card rounded-3xl border border-white/10 shadow-2xl p-6 relative overflow-hidden h-full flex flex-col min-h-0">
+              {/* Right Column: Dynamic Lyrics Card (Fills 100% on Mobile) */}
+              <div className="w-full lg:w-[60%] h-full max-h-[calc(100vh-140px)] lg:max-h-[calc(100vh-190px)] flex flex-col justify-center overflow-hidden">
+                <div className="glass-card rounded-2xl sm:rounded-3xl border border-white/10 shadow-2xl p-4 sm:p-6 relative overflow-hidden h-full flex flex-col min-h-0">
                   {/* Subtle internal gradient border */}
                   <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                  
+                  {/* Mobile Compact Playback Control Banner (Visible only on mobile screens < lg) */}
+                  <div className="lg:hidden mb-3 flex items-center justify-between bg-white/5 border border-white/10 rounded-2xl p-2.5 flex-shrink-0">
+                    <div className="flex items-center space-x-3 min-w-0 pr-2">
+                      <button
+                        onClick={() => {
+                          if (player) {
+                            if (playbackState === 'playing') player.pauseVideo();
+                            else player.playVideo();
+                          }
+                        }}
+                        className="w-10 h-10 rounded-xl bg-white text-black flex items-center justify-center flex-shrink-0 shadow-lg active:scale-95 transition-transform cursor-pointer"
+                      >
+                        {playbackState === 'playing' ? <Pause className="w-5 h-5 fill-black" /> : <Play className="w-4 h-4 fill-black ml-0.5" />}
+                      </button>
+                      <div className="min-w-0">
+                        <p className="text-xs font-bold text-white truncate font-outfit">
+                          {trackName || videoTitle || 'YouTube Track'}
+                        </p>
+                        <p className="text-[10px] text-purple-400 font-mono truncate font-semibold uppercase">
+                          {artistName || 'Playing Audio'}
+                        </p>
+                      </div>
+                    </div>
+
+                    {queue.length > 0 && (
+                      <button
+                        onClick={() => {
+                          const nextItem = queue[0];
+                          playQueueItemDirect(nextItem);
+                          useLyraStore.getState().removeFromQueue(nextItem.id);
+                        }}
+                        className="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center space-x-1 border border-white/10 flex-shrink-0 cursor-pointer"
+                        title="Play Next Song"
+                      >
+                        <SkipForward className="w-3.5 h-3.5" />
+                        <span className="text-[10px]">Next</span>
+                      </button>
+                    )}
+                  </div>
                   
                   {/* Song Title and Artist Info Display */}
                   {videoId && trackName && (
